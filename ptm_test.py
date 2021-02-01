@@ -12,17 +12,13 @@ import ptm
 myTree = ptm.Tree()
 
 # add an element to the tree
-myTree.print_tree()
-
+myTree.add_element("root1")
 myTree.add_branch("bra1")
-myTree.add_element("el1")
+myTree.add_element("el1", "bra1")
 myTree.add_element("el2", "bra1")
-myTree.add_element("el3", "bra1")
-myTree.add_branch("bra1a", "bra1")
-myTree.add_element("el3", "bra1.bra1a")
-
-#myTree.add_element("testonbra1", "bra1")
-#myTree.add_element("test2onbra1", "bra1")
+myTree.add_branch("bra2")
+myTree.add_branch("bra3")
+myTree.add_element("el3", "bra2")
 
 myTree.print_tree()
 

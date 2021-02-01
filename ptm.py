@@ -80,8 +80,8 @@ class Tree:
     def add_element(self, new_element, path=""):
         self._add_to_tree(uuid.uuid4().hex, new_element, path)
 
-    def print_tree(self):
-        #print(self._tree)
+    def print_tree(self, style="Default"):
+        self._style = _STYLES[style]
         self._print_branch(self._tree, 0)
 
 if (__name__ == "__main__"):
