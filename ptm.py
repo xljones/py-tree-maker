@@ -17,11 +17,11 @@ import uuid
           \                     \
            --- can have lots     --- of elements on lots of branches
 
-{[
-    "an element",
-    "branch" : {[
-        "branch element 1",
-        "branch element 2"
+{
+    "uuid" : "an element",
+    "branch" : {
+        "uuid" : "branch element 1",
+        "uuid" : "branch element 2"
     ]}
 ]}
 
