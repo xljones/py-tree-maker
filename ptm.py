@@ -30,9 +30,10 @@ _VERSION = "1.0.0"
 _STYLES = {
     "Default": {
         "indent" : 4,
-        "symbol_first": "┌── ",
-        "symbol_mid"  : "├── ",
-        "symbol_last" : "└── ",
+        "symbol_first": "┌── ", # used for the very first element or branch @ index 0, depth 0.
+        "symbol_mid"  : "├── ", # used by all elements or branches that are not last in their depth.
+        "symbol_last" : "└── ", # used by element or branch that is the last in its depth, OR
+                                # by an branch which has > 0 sub-elements
     }
 }
 
@@ -40,7 +41,6 @@ class Tree:
     _tree = None
     _style = None
 
-    
     def __init__(self):
         self._tree = {}
         self._style = _STYLES["Default"]
@@ -58,16 +58,24 @@ class Tree:
     def _print_branch(self, branch, depth):
         index = 0
         for id, element in branch.items():
+            if index == 0 and depth == 0:
+                _symbol = self._style["symbol_first"]
+            elif index == len(branch.items())-1:
+                _symbol = self._style["symbol_last"]
+            else:
+                _symbol = self._style["symbol_mid"]
+
             if type(element) == str:
                print("{0}{1}{2}".format(
                    " " * self._style["indent"] * depth,
-                   self._style["symbol_mid"], 
+                   _symbol, 
                    element))
             elif type(element) == dict:
-                print("{0}len of this branch({1}) = {2}".format(" " * self._style["indent"] * depth, id, len(element)))
+                if (len(element) > 0):
+                    _symbol = self._style["symbol_last"]
                 print('{0}{1}{2}'.format(
                     " " * self._style["indent"] * depth,
-                    self._style["symbol_mid"], 
+                    _symbol, 
                     id))
                 self._print_branch(element, depth+1)
             else:

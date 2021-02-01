@@ -18,7 +18,7 @@ myTree.add_element("el1", "bra1")
 myTree.add_element("el2", "bra1")
 myTree.add_branch("bra2")
 myTree.add_branch("bra3")
-myTree.add_element("el3", "bra2")
+myTree.add_element("el3", "bra3")
 
 myTree.print_tree()
 
