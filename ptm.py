@@ -24,16 +24,25 @@ import uuid
         "uuid" : "branch element 2"
     ]}
 ]}
-
 '''
 
 _VERSION = "1.0.0"
+_STYLES = {
+    "Default": {
+        "branch_symbol" : "B->",
+        "branch_indent" : 2,
+        "element_symbol" : "E->",
+        "element_indent" : 2
+    }
+}
 
 class Tree:
     _tree = None
+    _style = None
 
     def __init__(self):
         self._tree = {}
+        self._style = _STYLES["Default"]
 
     def add_branch(self, new_branch_id, path=""):
         obj = self._tree
@@ -62,9 +71,15 @@ class Tree:
     def _print_branch(self, branch, depth):
         for id, element in branch.items():
             if type(element) == str:
-               print("## [e] {0}{1}".format("--" * depth, element))
+               print("{0}{1}{2}".format(
+                   " " * self._style["element_indent"] * depth,
+                   self._style["element_symbol"], 
+                   element))
             elif type(element) == dict:
-                print('## [b] {0}{1}'.format("--" * depth, id))
+                print('{0}{1}{2}'.format(
+                    " " * self._style["branch_indent"] * depth,
+                    self._style["branch_symbol"], 
+                    id))
                 self._print_branch(element, depth+1)
             else:
                 raise TypeError("Unexpected data type [{0}] in tree".format(type(object)))
