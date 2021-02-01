@@ -29,10 +29,10 @@ import uuid
 _VERSION = "1.0.0"
 _STYLES = {
     "Default": {
-        "branch_symbol" : "B->",
-        "branch_indent" : 2,
-        "element_symbol" : "E->",
-        "element_indent" : 2
+        "indent" : 4,
+        "symbol_first": "┌── ",
+        "symbol_mid"  : "├── ",
+        "symbol_last" : "└── ",
     }
 }
 
@@ -40,49 +40,49 @@ class Tree:
     _tree = None
     _style = None
 
+    
     def __init__(self):
         self._tree = {}
         self._style = _STYLES["Default"]
 
-    def add_branch(self, new_branch_id, path=""):
-        obj = self._tree
+    def _add_to_tree(self, new_key, new_value, path):
+        ttree = self._tree # set a new tree to traverse and find the object at 'path'
         key_list = path.split(".")
         if key_list[0] != "":
-            for k in key_list[:-1]:
-                obj = obj[k]
-            obj[key_list[-1]][new_branch_id] = {}
+            for key in key_list[:-1]:
+                ttree = ttree[key]
+            ttree[key_list[-1]][new_key] = new_value
         else:
-            obj[new_branch_id] = {}
+            ttree[new_key] = new_value
 
-    def add_element(self, new_element, path=""):
-        obj = self._tree
-        key_list = path.split(".")
-        if key_list[0] != "":
-            for k in key_list[:-1]:
-                obj = obj[k]
-            obj[key_list[-1]][uuid.uuid4().hex] = new_element
-        else:
-            obj[uuid.uuid4().hex] = new_element
-
-    def print_tree(self):
-        #print(self._tree)
-        self._print_branch(self._tree, 0)
-    
     def _print_branch(self, branch, depth):
+        index = 0
         for id, element in branch.items():
             if type(element) == str:
                print("{0}{1}{2}".format(
-                   " " * self._style["element_indent"] * depth,
-                   self._style["element_symbol"], 
+                   " " * self._style["indent"] * depth,
+                   self._style["symbol_mid"], 
                    element))
             elif type(element) == dict:
+                print("{0}len of this branch({1}) = {2}".format(" " * self._style["indent"] * depth, id, len(element)))
                 print('{0}{1}{2}'.format(
-                    " " * self._style["branch_indent"] * depth,
-                    self._style["branch_symbol"], 
+                    " " * self._style["indent"] * depth,
+                    self._style["symbol_mid"], 
                     id))
                 self._print_branch(element, depth+1)
             else:
                 raise TypeError("Unexpected data type [{0}] in tree".format(type(object)))
+            index += 1
+
+    def add_branch(self, new_branch_id, path=""):
+        self._add_to_tree(new_branch_id, {}, path)
+        
+    def add_element(self, new_element, path=""):
+        self._add_to_tree(uuid.uuid4().hex, new_element, path)
+
+    def print_tree(self):
+        #print(self._tree)
+        self._print_branch(self._tree, 0)
 
 if (__name__ == "__main__"):
     print("'{0}' is a library and cannot be called directly, please see the README.md for this script".format(os.path.basename(__file__)))
