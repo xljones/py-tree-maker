@@ -6,48 +6,68 @@
     Date:        12 May 2020
 '''
 
-import argparse
 import os
 import sys
+import uuid
+
+'''
+---- root branch with elements
+    \
+     ---- new branch - all of - its - elements
+          \                     \
+           --- can have lots     --- of elements on lots of branches
+
+{[
+    "an element",
+    "branch" : {[
+        "branch element 1",
+        "branch element 2"
+    ]}
+]}
+
+'''
 
 _VERSION = "1.0.0"
 
-class Branch:
-    _text = None
-    _level = -1
-
-    def __init__(self, branch_text, branch_level):
-        self._text = branch_text
-        self._level = branch_level
-
-    def edit(self, new_text, new_level):
-        print("edit this branch")
-
-
 class Tree:
-    _tree = []
-    _style = 0
+    _tree = None
 
     def __init__(self):
-        print("init")
+        self._tree = {}
 
-    def print(self):
-        print("im printing!")
-        print(self._tree)
+    def add_branch(self, new_branch_id, path=""):
+        obj = self._tree
+        key_list = path.split(".")
+        if key_list[0] != "":
+            for k in key_list[:-1]:
+                obj = obj[k]
+            obj[key_list[-1]][new_branch_id] = {}
+        else:
+            obj[new_branch_id] = {}
 
-    def add(self, text, level):
-        new_branch = Branch(text, level)
-        self._tree.append(new_branch)
-        print("New branch '{0}' added at level {1}".format(text, level))
+    def add_element(self, new_element, path=""):
+        obj = self._tree
+        key_list = path.split(".")
+        if key_list[0] != "":
+            for k in key_list[:-1]:
+                obj = obj[k]
+            obj[key_list[-1]][uuid.uuid4().hex] = new_element
+        else:
+            obj[uuid.uuid4().hex] = new_element
 
-    def prune(self, count):
-        print("prune the last {0} off the list".format(count))
-
-    def pop(self):
-        print("pop from top of list")
-
-    def delete(self, index):
-        print("delete the item at index {0}".format(index))
+    def print_tree(self):
+        #print(self._tree)
+        self._print_branch(self._tree, 0)
+    
+    def _print_branch(self, branch, depth):
+        for id, element in branch.items():
+            if type(element) == str:
+               print("## [e] {0}{1}".format("--" * depth, element))
+            elif type(element) == dict:
+                print('## [b] {0}{1}'.format("--" * depth, id))
+                self._print_branch(element, depth+1)
+            else:
+                raise TypeError("Unexpected data type [{0}] in tree".format(type(object)))
 
 if (__name__ == "__main__"):
-    print("This file 'ptm.py' is a library and cannot be called directly, please see the README.md for this script")
+    print("'{0}' is a library and cannot be called directly, please see the README.md for this script".format(os.path.basename(__file__)))

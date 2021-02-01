@@ -9,17 +9,20 @@
 import ptm
 
 # create a tree object
-tree = ptm.Tree()
+myTree = ptm.Tree()
 
 # add an element to the tree
-tree.add("welcome", 1)
-tree.add("this is a new level", 2)
-tree.add("this follows the same level as above", 2)
-tree.add("ohn wow back to level 1", 1)
-tree.add("this is a new level", 2)
-tree.add("this follows the same level as above", 2)
-tree.add("lets stay on this level", 2)
-tree.add("i like it here", 2)
+myTree.print_tree()
 
-# pretty print the tree!
-tree.print()
+myTree.add_branch("bra1")
+myTree.add_element("el1")
+myTree.add_element("el2", "bra1")
+myTree.add_element("el3", "bra1")
+myTree.add_branch("bra1a", "bra1")
+myTree.add_element("el3", "bra1.bra1a")
+
+#myTree.add_element("testonbra1", "bra1")
+#myTree.add_element("test2onbra1", "bra1")
+
+myTree.print_tree()
+
