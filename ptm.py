@@ -40,10 +40,21 @@ class Tree:
     _tree = None
     _style = None
 
+    ''' PRIVATE
+        initialize the object with an empty tree
+        and a default styling
+    '''
     def __init__(self):
         self._tree = {}
         self._style = _STYLES["Default"]
 
+    ''' PRIVATE
+        add a new element or branch to the tree.
+            elements use new_key = a UUID
+                         new_value = the desired value of the element
+            branches use new_key = the ID of the branch
+                         new_value = {} (empty dict)
+    '''
     def _add_to_tree(self, new_key, new_value, path):
         ttree = self._tree # set a new tree to traverse and find the object at 'path'
         key_list = path.split(".")
@@ -54,6 +65,10 @@ class Tree:
         else:
             ttree[new_key] = new_value
 
+    ''' PRIVATE
+        returns the symbol that should lead up
+        to an element or a branch to create the tree
+    '''
     def _calc_symbol(self, index, depth, branch, is_branch, element):
         if (len(element) > 0 and is_branch):                # is this a branch that contains no sub-elements?
            return self._style["symbol_last"]
@@ -66,18 +81,34 @@ class Tree:
 
     def _is_branch(self, element):
         if type(element) == str: 
+    ''' PRIVATE
+        returns whether a value is a branch, 
+        or if it is just an element. Raises a TypeError
+        exception if the data type is unexpected
+    '''
             return False
         elif type(element) == dict:
             return True
         else:
             raise TypeError("Unexpected data type [{0}] in tree".format(type(element)))
 
+    ''' PRIVATE
+        print an individual element (str) of the branch
+        using the associated format for the depth
+
+        TODO: improve tree tracing from parent branch to next
+              parent branch
+    '''
     def _print_element(self, symbol, data, depth):
         print("{0}{1}{2}".format(
             " " * self._style["indent"] * depth,
             symbol, 
             data))
 
+    ''' PRIVATE
+        prints the root_branch, recursively calls this function
+        for each new branch found within the root_branch
+    '''
     def _print_branch(self, root_branch, depth):
         index = 0
         for id, element in root_branch.items():
@@ -90,15 +121,33 @@ class Tree:
                 self._print_element(symbol, element, depth)
             index += 1
 
+    ''' PUBLIC
+        function to add a new branch to the tree
+            new_branch_id : the name of the new branch to add
+            path          : a dotnotation to the root of the new branch
+                            defaults to use the tree root
+    '''
     def add_branch(self, new_branch_id, path=""):
         self._add_to_tree(new_branch_id, {}, path)
         
+    ''' PUBLIC
+        function to add a new element to the tree
+            new_element   : the name of the new branch to add
+            path          : a dotnotation to the root of the new element
+                            defaults to use the tree root
+    '''
     def add_element(self, new_element, path=""):
         self._add_to_tree(uuid.uuid4().hex, new_element, path)
 
+    ''' PUBLIC
+        function to print the tree
+            style (optional) : select a style to print with, 
+                               defaults to using the default style
+    '''
     def print_tree(self, style="Default"):
         self._style = _STYLES[style]
         self._print_branch(self._tree, 0)
 
 if (__name__ == "__main__"):
+    # Uhoh, this is a library, do not pass go, do not collect $200.
     print("'{0}' is a library and cannot be called directly, please see the README.md for this script".format(os.path.basename(__file__)))
