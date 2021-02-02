@@ -70,27 +70,27 @@ class Tree:
         to an element or a branch to create the tree
     '''
     def _calc_symbol(self, index, depth, branch, is_branch, element):
-        if (len(element) > 0 and is_branch):                # is this a branch that contains no sub-elements?
+        if (len(element) > 0 and is_branch):    # is this a branch that contains no sub-elements?
            return self._style["symbol_last"]
         elif index == 0 and depth == 0:         # is this the first symbol of the entire tree?
             return self._style["symbol_first"]
-        elif index == len(branch.items())-1:  # is this the last symbol of this branch?
+        elif index == len(branch.items())-1:    # is this the last symbol of this branch?
             return self._style["symbol_last"]
-        else:                                 # else, this must be a mid-way part of a branch
+        else:                                   # else, this must be a mid-way part of a branch
             return self._style["symbol_mid"] 
 
-    def _is_branch(self, element):
-        if type(element) == str: 
     ''' PRIVATE
         returns whether a value is a branch, 
         or if it is just an element. Raises a TypeError
         exception if the data type is unexpected
     '''
+    def _is_branch(self, value):
+        if type(value) == str: 
             return False
-        elif type(element) == dict:
+        elif type(value) == dict:
             return True
         else:
-            raise TypeError("Unexpected data type [{0}] in tree".format(type(element)))
+            raise TypeError("Unexpected data type [{0}] in tree".format(type(value)))
 
     ''' PRIVATE
         print an individual element (str) of the branch
@@ -111,14 +111,14 @@ class Tree:
     '''
     def _print_branch(self, root_branch, depth):
         index = 0
-        for id, element in root_branch.items():
-            element_is_branch = self._is_branch(element)
-            symbol = self._calc_symbol(index, depth, root_branch, element_is_branch, element)
-            if self._is_branch(element):
-                self._print_element(symbol, id, depth)
-                self._print_branch(element, depth+1)
+        for key, value in root_branch.items():
+            element_is_branch = self._is_branch(value)
+            symbol = self._calc_symbol(index, depth, root_branch, element_is_branch, value)
+            if self._is_branch(value):
+                self._print_element(symbol, key, depth)
+                self._print_branch(value, depth+1)
             else:
-                self._print_element(symbol, element, depth)
+                self._print_element(symbol, value, depth)
             index += 1
 
     ''' PUBLIC
