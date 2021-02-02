@@ -55,16 +55,18 @@ class Tree:
         else:
             ttree[new_key] = new_value
 
+    def _calc_symbol(self, index, depth, branch):
+        if index == 0 and depth == 0:
+            return self._style["symbol_first"]
+        elif index == len(branch.items())-1:
+            return self._style["symbol_last"]
+        else:
+            return self._style["symbol_mid"]
+
     def _print_branch(self, branch, depth):
         index = 0
         for id, element in branch.items():
-            if index == 0 and depth == 0:
-                _symbol = self._style["symbol_first"]
-            elif index == len(branch.items())-1:
-                _symbol = self._style["symbol_last"]
-            else:
-                _symbol = self._style["symbol_mid"]
-
+            _symbol = self._calc_symbol(index, depth, branch)
             if type(element) == str:
                print("{0}{1}{2}".format(
                    " " * self._style["indent"] * depth,
