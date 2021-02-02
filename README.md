@@ -52,7 +52,7 @@ myTree.add_element(the_element [str], dot_notation_path_to_parent_branch [str])
 
 #### Printing the tree
 ```py
-myTree.print_tree(style [str, optional])
+myTree.print(style [str, optional])
 ```
 
 ## Example
