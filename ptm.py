@@ -3,7 +3,7 @@
     Description: Python pretty tree maker
     Author:      Xander Jones (xander@xljones.com)
     Web:         xljones.com
-    Date:        12 May 2020
+    Date:        2 Feb 2021
 '''
 
 import os
@@ -28,7 +28,7 @@ import uuid
 _VERSION = "1.0.0"
 _STYLES = {
     "Default": {
-        "indent" : 4,
+        "indent"      : 4,      # the number of spaces to leave per increase in depth
         "symbol_first": "┌── ", # used for the very first element or branch @ index 0, depth 0.
         "symbol_mid"  : "├── ", # used by all elements or branches that are not last in their depth.
         "symbol_last" : "└── ", # used by element or branch that is the last in its depth, OR
@@ -144,7 +144,7 @@ class Tree:
             style (optional) : select a style to print with, 
                                defaults to using the default style
     '''
-    def print_tree(self, style="Default"):
+    def print(self, style="Default"):
         self._style = _STYLES[style]
         self._print_branch(self._tree, 0)
 
