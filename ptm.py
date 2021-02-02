@@ -55,33 +55,40 @@ class Tree:
         else:
             ttree[new_key] = new_value
 
-    def _calc_symbol(self, index, depth, branch):
-        if index == 0 and depth == 0:
+    def _calc_symbol(self, index, depth, branch, is_branch, element):
+        if (len(element) > 0 and is_branch):                # is this a branch that contains no sub-elements?
+           return self._style["symbol_last"]
+        elif index == 0 and depth == 0:         # is this the first symbol of the entire tree?
             return self._style["symbol_first"]
-        elif index == len(branch.items())-1:
+        elif index == len(branch.items())-1:  # is this the last symbol of this branch?
             return self._style["symbol_last"]
-        else:
-            return self._style["symbol_mid"]
+        else:                                 # else, this must be a mid-way part of a branch
+            return self._style["symbol_mid"] 
 
-    def _print_branch(self, branch, depth):
+    def _is_branch(self, element):
+        if type(element) == str: 
+            return False
+        elif type(element) == dict:
+            return True
+        else:
+            raise TypeError("Unexpected data type [{0}] in tree".format(type(element)))
+
+    def _print_element(self, symbol, data, depth):
+        print("{0}{1}{2}".format(
+            " " * self._style["indent"] * depth,
+            symbol, 
+            data))
+
+    def _print_branch(self, root_branch, depth):
         index = 0
-        for id, element in branch.items():
-            _symbol = self._calc_symbol(index, depth, branch)
-            if type(element) == str:
-               print("{0}{1}{2}".format(
-                   " " * self._style["indent"] * depth,
-                   _symbol, 
-                   element))
-            elif type(element) == dict:
-                if (len(element) > 0):
-                    _symbol = self._style["symbol_last"]
-                print('{0}{1}{2}'.format(
-                    " " * self._style["indent"] * depth,
-                    _symbol, 
-                    id))
+        for id, element in root_branch.items():
+            element_is_branch = self._is_branch(element)
+            symbol = self._calc_symbol(index, depth, root_branch, element_is_branch, element)
+            if self._is_branch(element):
+                self._print_element(symbol, id, depth)
                 self._print_branch(element, depth+1)
             else:
-                raise TypeError("Unexpected data type [{0}] in tree".format(type(object)))
+                self._print_element(symbol, element, depth)
             index += 1
 
     def add_branch(self, new_branch_id, path=""):
